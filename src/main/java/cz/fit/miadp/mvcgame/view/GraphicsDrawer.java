@@ -1,6 +1,6 @@
 package cz.fit.miadp.mvcgame.view;
 
-import cz.fit.miadp.mvcgame.Cannon;
+import cz.fit.miadp.mvcgame.model.*;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.IOException;

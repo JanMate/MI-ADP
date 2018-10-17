@@ -7,12 +7,17 @@ import java.awt.event.KeyEvent;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
+import cz.fit.miadp.mvcgame.controller.GameController;
+
 public class MainWindow extends JFrame {
 
 
-    public MainWindow() {
+    public MainWindow(final GameController controller) {
         try {
             Canvas view = new Canvas(0, 0, 500, 500);
+            // wire MVC
+            controller.setView(view);
+            view.setModel(controller.getModel());
 
             this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             this.setTitle("MyShooter");
@@ -26,8 +31,7 @@ public class MainWindow extends JFrame {
             this.addKeyListener(new KeyAdapter() {
                 @Override
                 public void keyPressed(KeyEvent evt) {
-                    // delegate to controller
-                    System.out.println("key pressed: " + evt.getKeyChar());
+                    controller.onKeyPress(evt);
                 }
             });
 
