@@ -37,26 +37,28 @@ public class GraphicsDrawer {
     }
     
     public void drawMissile(Graphics g, Missile missile) {
-        
+        g.drawImage(missileImage, 
+              missile.getX() - missileImage.getWidth()/2, 
+              missile.getY() - missileImage.getHeight()/2, null);
     }
     
     public void drawEnemy(Graphics g, Enemy enemy) {
-        
+        g.drawImage(enemyImage1, 
+              enemy.getX() - enemyImage1.getWidth()/2, 
+              enemy.getY() - enemyImage1.getHeight()/2, null);
     }
     
     public void drawCollision(Graphics g, Collision collision) {        
-        
+        g.drawImage(collisionImage, 
+              collision.getX() - collisionImage.getWidth()/2, 
+              collision.getY() - collisionImage.getHeight()/2, null);
     }
     
     public void drawInfo(Graphics g, ModelInfo info) {
-        
+        g.drawString(info.getText(), info.getX(), info.getY());
     }
     
     
-    // fake classes just to satisfy compilator
-    class Missile{}
-    class Collision{}
-    class Enemy {}
-    class ModelInfo {}
+
 
 }

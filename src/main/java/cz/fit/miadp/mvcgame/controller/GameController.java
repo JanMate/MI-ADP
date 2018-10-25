@@ -1,27 +1,15 @@
 package cz.fit.miadp.mvcgame.controller;
 
 import java.awt.event.KeyEvent;
-import cz.fit.miadp.mvcgame.view.Canvas;
 import cz.fit.miadp.mvcgame.model.GameModel;
 
 public class GameController
 {
     private GameModel model;
-    private Canvas view;
-
-    public GameController(GameModel model)
+    
+    public void setModel(GameModel model)
     {
         this.model = model;
-    }
-
-    public void setView(Canvas view)
-    {
-        this.view = view;
-    }
-
-    public GameModel getModel()
-    {
-        return this.model;
     }
 
     public void onKeyPress(KeyEvent evt)
@@ -38,10 +26,7 @@ public class GameController
                 //nothing
         }
 
-        if(this.view instanceof Canvas)
-        {
-            this.view.thisIsHowYouForceGuiToRepaint();
-        }
+        
     }
 
 }

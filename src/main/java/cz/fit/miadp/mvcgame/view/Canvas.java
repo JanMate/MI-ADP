@@ -1,14 +1,18 @@
 package cz.fit.miadp.mvcgame.view;
 
-import cz.fit.miadp.mvcgame.model.GameModel;
-
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+
 import javax.swing.JPanel;
 
+import cz.fit.miadp.mvcgame.controller.GameController;
+import cz.fit.miadp.mvcgame.model.Enemy;
+import cz.fit.miadp.mvcgame.model.GameModel;
+import cz.fit.miadp.mvcgame.observer.IObserver;
 
-public class Canvas extends JPanel { 
+
+public class Canvas extends JPanel implements IObserver { 
     GraphicsDrawer drawer = new GraphicsDrawer();
     GameModel model;
 
@@ -20,12 +24,23 @@ public class Canvas extends JPanel {
         this.setVisible(true);        
     }
 
+    public GameController createController()
+    {
+        GameController ctrl = new GameController();
+        //ctrl.setView(this);
+        return ctrl;
+    }
+
     public void setModel(GameModel model)
     {
+        if(this.model != null && this.model != model)
+            this.model.deattachObserver(this);
+
         this.model = model;
+        this.model.attachObserver(this);
     }
     
-    public void thisIsHowYouForceGuiToRepaint() {        
+    public void update() {        
         repaint();
     }
 
@@ -35,6 +50,12 @@ public class Canvas extends JPanel {
         if(this.model instanceof GameModel)
         {
             drawer.drawCannon(g, this.model.getCannon() );
+            drawer.drawInfo(g, this.model.getInfo() );
+
+            for(Enemy enemy : this.model.getEnemies())
+            {
+                drawer.drawEnemy(g, enemy);
+            }
         }
     }
     

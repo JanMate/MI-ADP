@@ -1,6 +1,6 @@
 package cz.fit.miadp.mvcgame.model;
 
-public class Cannon extends GameObject {
+public class Collision extends GameObject {
 
     
 }
