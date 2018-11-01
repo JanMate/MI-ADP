@@ -41,7 +41,12 @@ public class DefaultGameObjectsFactory implements IGameObjectsFactory
 
     public Missile createMissile()
     {
-        return new Missile();
+        return new Missile(
+            this.model.getCannon().getX(),
+            this.model.getCannon().getY(),
+            this.model.getCannon().getAngle(),
+            this.model.getCannon().getPower()
+        );
     }
 
     public Collision createCollision()

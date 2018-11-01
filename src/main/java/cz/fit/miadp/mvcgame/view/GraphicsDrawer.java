@@ -1,15 +1,19 @@
 package cz.fit.miadp.mvcgame.view;
 
 import cz.fit.miadp.mvcgame.model.*;
+import cz.fit.miadp.mvcgame.visitor.IVisitor;
+
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
-public class GraphicsDrawer {
+public class GraphicsDrawer implements IVisitor {
     private static final int INFO_X = 5;
     private static final int INFO_Y = 15;
     
+    private Graphics g;
+
     private BufferedImage cannonImage;
     private BufferedImage enemyImage1;
     private BufferedImage enemyImage2;
@@ -28,7 +32,32 @@ public class GraphicsDrawer {
             ex.printStackTrace(System.err);
         }
     }
-        
+
+    public void setGraphics(Graphics g)
+    {
+        this.g = g;
+    }
+
+    public void visitCannon(Cannon cannon) {
+        if(g == null) return;
+        drawCannon(g, cannon);
+    }
+    public void visitEnemy(Enemy enemy) {
+        if(g == null) return;
+        drawEnemy(g, enemy);
+    }
+    public void visitMissile(Missile missile) {
+        if(g == null) return;
+        drawMissile(g, missile);
+    }
+    public void visitInfo(ModelInfo info) {
+        if(g == null) return;
+        drawInfo(g, info);
+    }
+    public void visitCollision(Collision collision) {
+        if(g == null) return;
+        drawCollision(g, collision);
+    }
     
     public void drawCannon(Graphics g, Cannon cannon) {
         g.drawImage(cannonImage, 

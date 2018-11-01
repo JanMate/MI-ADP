@@ -9,6 +9,8 @@ import javax.swing.JPanel;
 import cz.fit.miadp.mvcgame.controller.GameController;
 import cz.fit.miadp.mvcgame.model.Enemy;
 import cz.fit.miadp.mvcgame.model.GameModel;
+import cz.fit.miadp.mvcgame.model.GameObject;
+import cz.fit.miadp.mvcgame.model.Missile;
 import cz.fit.miadp.mvcgame.observer.IObserver;
 
 
@@ -47,15 +49,13 @@ public class Canvas extends JPanel implements IObserver {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+        
+        drawer.setGraphics(g);
+
         if(this.model instanceof GameModel)
         {
-            drawer.drawCannon(g, this.model.getCannon() );
-            drawer.drawInfo(g, this.model.getInfo() );
-
-            for(Enemy enemy : this.model.getEnemies())
-            {
-                drawer.drawEnemy(g, enemy);
-            }
+            for(GameObject go : this.model.getGameObjects() )
+                go.acceptVisitor(drawer);
         }
     }
     

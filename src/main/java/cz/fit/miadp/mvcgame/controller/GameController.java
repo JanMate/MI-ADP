@@ -22,6 +22,22 @@ public class GameController
             case KeyEvent.VK_DOWN:
                 this.model.moveCannonDown();
                 break;
+            case KeyEvent.VK_SPACE:
+                this.model.cannonShoot();
+                break;
+            case KeyEvent.VK_A:
+                this.model.aimCannonUp();
+                break;
+            case KeyEvent.VK_Z:
+                this.model.aimCannonDown();
+                break;
+            case KeyEvent.VK_S:
+                this.model.incCannonPower();
+                break;
+            case KeyEvent.VK_X:
+                this.model.decCannonPower();
+                break;
+
             default:
                 //nothing
         }

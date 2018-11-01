@@ -1,5 +1,7 @@
 package cz.fit.miadp.mvcgame.model;
 
+import cz.fit.miadp.mvcgame.visitor.IVisitor;
+
 public abstract class GameObject {
 
     private int posX = 100;
@@ -20,4 +22,7 @@ public abstract class GameObject {
     public void setY(int y) {
         this.posY = y;
     }
+
+    public abstract void move();
+    public abstract void acceptVisitor(IVisitor visitor);
 }
