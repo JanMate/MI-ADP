@@ -9,12 +9,12 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import cz.fit.miadp.mvcgame.controller.GameController;
-import cz.fit.miadp.mvcgame.model.GameModel;
+import cz.fit.miadp.mvcgame.proxy.IGameModel;
 
 public class MainWindow extends JFrame {
 
 
-    public MainWindow(final GameModel model) {
+    public MainWindow(final IGameModel model) {
         try {
             Canvas view = new Canvas(0, 0, model.getMaxX(), model.getMaxY());
             // wire MVC

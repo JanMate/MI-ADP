@@ -7,16 +7,14 @@ import java.awt.Graphics;
 import javax.swing.JPanel;
 
 import cz.fit.miadp.mvcgame.controller.GameController;
-import cz.fit.miadp.mvcgame.model.Enemy;
-import cz.fit.miadp.mvcgame.model.GameModel;
+import cz.fit.miadp.mvcgame.proxy.IGameModel;
 import cz.fit.miadp.mvcgame.model.GameObject;
-import cz.fit.miadp.mvcgame.model.Missile;
 import cz.fit.miadp.mvcgame.observer.IObserver;
 
 
 public class Canvas extends JPanel implements IObserver { 
     GraphicsDrawer drawer = new GraphicsDrawer();
-    GameModel model;
+    IGameModel model;
 
     public Canvas(int x, int y, int width, int height) {
         this.setBackground(Color.WHITE);
@@ -33,7 +31,7 @@ public class Canvas extends JPanel implements IObserver {
         return ctrl;
     }
 
-    public void setModel(GameModel model)
+    public void setModel(IGameModel model)
     {
         if(this.model != null && this.model != model)
             this.model.deattachObserver(this);
@@ -52,7 +50,7 @@ public class Canvas extends JPanel implements IObserver {
         
         drawer.setGraphics(g);
 
-        if(this.model instanceof GameModel)
+        if(this.model instanceof IGameModel)
         {
             for(GameObject go : this.model.getGameObjects() )
                 go.acceptVisitor(drawer);

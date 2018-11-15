@@ -1,13 +1,13 @@
 package cz.fit.miadp.mvcgame.controller;
 
 import java.awt.event.KeyEvent;
-import cz.fit.miadp.mvcgame.model.GameModel;
+import cz.fit.miadp.mvcgame.proxy.IGameModel;
 
 public class GameController
 {
-    private GameModel model;
+    private IGameModel model;
     
-    public void setModel(GameModel model)
+    public void setModel(IGameModel model)
     {
         this.model = model;
     }
@@ -37,7 +37,12 @@ public class GameController
             case KeyEvent.VK_X:
                 this.model.decCannonPower();
                 break;
-
+            case KeyEvent.VK_Q:
+                this.model.switchMovementStrategy();
+                break;
+            case KeyEvent.VK_W:
+                this.model.cannonToggleShootingMode();
+                break;
             default:
                 //nothing
         }

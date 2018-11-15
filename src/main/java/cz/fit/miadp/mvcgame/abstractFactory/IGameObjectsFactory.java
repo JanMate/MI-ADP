@@ -11,7 +11,7 @@ public interface IGameObjectsFactory
     Cannon createCannon();
     Enemy createEnemy();
     Missile createMissile();
-    Collision createCollision();
+    Collision createCollision(int x, int y);
     ModelInfo createModelInfo();
 
 }

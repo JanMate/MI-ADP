@@ -20,7 +20,7 @@ public class DefaultGameObjectsFactory implements IGameObjectsFactory
 
     public Cannon createCannon()
     {
-        Cannon cannon = new Cannon();
+        Cannon cannon = new Cannon(this);
         cannon.setX(50);
         return cannon;
     }
@@ -45,13 +45,19 @@ public class DefaultGameObjectsFactory implements IGameObjectsFactory
             this.model.getCannon().getX(),
             this.model.getCannon().getY(),
             this.model.getCannon().getAngle(),
-            this.model.getCannon().getPower()
+            this.model.getCannon().getPower(),
+            this.model.getActiveMovementStrategy()
         );
     }
 
-    public Collision createCollision()
+    public Collision createCollision(int x, int y)
     {
-        return new Collision();
+        Collision collision = new Collision();
+
+        collision.setX(x);
+        collision.setY(y);
+
+        return collision;
     }
 
     public ModelInfo createModelInfo()

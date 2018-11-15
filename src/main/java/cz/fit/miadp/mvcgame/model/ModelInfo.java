@@ -18,6 +18,8 @@ public class ModelInfo extends GameObject {
                 +" Cannon.Angle: " + this.model.getCannon().getAngle()
                 +" Cannon.Power: " + this.model.getCannon().getPower()
                 +" Missile.size: " + this.model.getMissiles().size()
+                +" MoveStrg: " + this.model.getActiveMovementStrategy().getName()
+                +" ShootMode: " + this.model.getCannon().getShootingMode().getName()
                 ;
     }
 

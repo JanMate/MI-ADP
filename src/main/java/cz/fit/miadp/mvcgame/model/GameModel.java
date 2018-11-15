@@ -2,40 +2,51 @@ package cz.fit.miadp.mvcgame.model;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import cz.fit.miadp.mvcgame.abstractFactory.DefaultGameObjectsFactory;
 import cz.fit.miadp.mvcgame.abstractFactory.IGameObjectsFactory;
+import cz.fit.miadp.mvcgame.config.GameConfig;
 import cz.fit.miadp.mvcgame.observer.IObservable;
 import cz.fit.miadp.mvcgame.observer.IObserver;
+import cz.fit.miadp.mvcgame.proxy.IGameModel;
+import cz.fit.miadp.mvcgame.strategy.IMovementStrategy;
+import cz.fit.miadp.mvcgame.strategy.RandomMovementStrategy;
+import cz.fit.miadp.mvcgame.strategy.SimpleMovementStrategy;
 
-public class GameModel implements IObservable
+public class GameModel implements IObservable, IGameModel
 {
     private Cannon cannon;
     private ModelInfo info;
     private ArrayList<Enemy> enemies = new ArrayList<Enemy>();
     private ArrayList<Missile> missiles = new ArrayList<Missile>();
+    private ArrayList<Collision> collisions = new ArrayList<Collision>();
 
-    private int score;
-    private float gravity;
+    private int score = GameConfig.INIT_SCORE;
+    private float gravity = GameConfig.INIT_GRAVITY;
     // ..
-    private int confMaxX = 500;
-    private int confMaxY = 500;
-    private int confMoveStep = 10;
-    private int confMaxEnemies = 10;
-    private int confTimerPeriod = 30;
     
-    private ArrayList<IObserver> myObservers = new ArrayList<IObserver>();
+    private List<IObserver> myObservers = new ArrayList<IObserver>();
     private IGameObjectsFactory goFact;
     private Timer timer;
+    private List<IMovementStrategy> movementStrategies = new ArrayList<IMovementStrategy>();
+    private int activeMovementStrategyIndex = 0;
 
     public GameModel()
     {
         this.goFact = new DefaultGameObjectsFactory(this);
 
+        this.movementStrategies.add( new SimpleMovementStrategy() );
+        this.movementStrategies.add( new RandomMovementStrategy() );
+
         initGame();
         initTimer();
+    }
+
+    public ArrayList<Collision> getCollisions() {
+        return collisions;
     }
 
     protected void initTimer()
@@ -44,16 +55,62 @@ public class GameModel implements IObservable
         this.timer.schedule(new TimerTask(){
             @Override
             public void run() {
+                // THE GAME LOOP
                 moveGameObjects();
             }
-        }, 0, this.confTimerPeriod);
+        }, 0, GameConfig.TIME_TICK);
     }
 
     private void moveGameObjects() {
         moveMissiles();
         destroyInvisibleObjects();
 
+        handleCollisions();
+
         this.notifyMyObservers();
+    }
+
+    private void handleCollisions() {
+        List<Missile> missToRemove = new ArrayList<Missile>();
+        List<Enemy> enemsToRemove = new ArrayList<Enemy>();
+
+        for(Missile m : this.getMissiles())
+        {
+            for(Enemy e : this.getEnemies())
+            {
+                if(m.collidesWith(e))
+                {
+                    // remove m & e
+                    missToRemove.add(m);
+                    enemsToRemove.add(e);
+
+                    // inc score
+                    this.score++;
+
+                    // create Collision
+                    collisions.add( goFact.createCollision(m.getX(), m.getY()) );
+                }
+            }
+        } 
+
+        // collect old collisions
+        List<Collision> collsToRemove = new ArrayList<Collision>();
+        for(Collision c : this.collisions)
+        {
+            if(c.getLifetime() > GameConfig.COLLISION_LIFETIME)
+            {
+                collsToRemove.add(c);
+            }
+        }
+
+        // remove stuff
+        for(Collision c : collsToRemove)
+            this.collisions.remove(c);
+        for(Enemy e : enemsToRemove)
+            this.enemies.remove(e);
+        for(Missile m : missToRemove)
+            this.missiles.remove(m);
+
     }
 
     private void destroyInvisibleObjects() {
@@ -84,7 +141,7 @@ public class GameModel implements IObservable
         this.info = this.goFact.createModelInfo();
         
         this.enemies.clear();
-        for(int i=0; i < confMaxEnemies; i++)
+        for(int i=0; i < GameConfig.MAX_ENEMIES; i++)
             this.enemies.add( this.goFact.createEnemy() );
     }
 
@@ -95,12 +152,12 @@ public class GameModel implements IObservable
 
     public int getMaxX()
     {
-        return this.confMaxX;
+        return GameConfig.MAX_X;
     }
 
     public int getMaxY()
     {
-        return this.confMaxY;
+        return GameConfig.MAX_Y;
     }
 
     public ArrayList<Enemy> getEnemies()
@@ -120,7 +177,7 @@ public class GameModel implements IObservable
     public void moveCannonUp()
     {
         int y = this.cannon.getY();
-        y -= confMoveStep;
+        y -= GameConfig.MOVE_STEP;
         this.cannon.setY(y);
 
         this.notifyMyObservers();
@@ -129,9 +186,15 @@ public class GameModel implements IObservable
     public void moveCannonDown()
     {
         int y = this.cannon.getY();
-        y += confMoveStep;
+        y += GameConfig.MOVE_STEP;
         this.cannon.setY(y);
 
+        this.notifyMyObservers();
+    }
+
+    public void switchMovementStrategy()
+    {
+        activeMovementStrategyIndex = (activeMovementStrategyIndex + 1) % movementStrategies.size();
         this.notifyMyObservers();
     }
 
@@ -159,10 +222,15 @@ public class GameModel implements IObservable
     }
 
 	public void cannonShoot() {
-        this.missiles.add( this.cannon.shoot(goFact) );
+        this.missiles.addAll( this.cannon.shoot() );
 
         this.notifyMyObservers();
-	}
+    }
+    
+    public void cannonToggleShootingMode()
+    {
+        this.cannon.toggleShootingMode();
+    }
 
 	public void aimCannonUp() {
         this.cannon.aimUp();
@@ -197,5 +265,9 @@ public class GameModel implements IObservable
         gos.add(this.getInfo());
 
         return gos;
+	}
+
+	public IMovementStrategy getActiveMovementStrategy() {
+		return this.movementStrategies.get(this.activeMovementStrategyIndex);
 	}
 }
