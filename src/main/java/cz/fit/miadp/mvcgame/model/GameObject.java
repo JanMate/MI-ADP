@@ -34,7 +34,8 @@ public abstract class GameObject {
         int bY = otherObject.getY();
 
         //GameConfig.COLLIDE_FACTOR;
-        //TODO
+        bCollides = bCollides && (Math.abs(aX-bX) < GameConfig.COLLIDE_FACTOR);
+        bCollides = bCollides && (Math.abs(aY-bY) < GameConfig.COLLIDE_FACTOR);
 
         return bCollides;
     }

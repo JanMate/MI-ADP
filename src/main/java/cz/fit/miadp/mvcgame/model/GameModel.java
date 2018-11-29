@@ -3,11 +3,15 @@ package cz.fit.miadp.mvcgame.model;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Queue;
+import java.util.Stack;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import cz.fit.miadp.mvcgame.abstractFactory.DefaultGameObjectsFactory;
 import cz.fit.miadp.mvcgame.abstractFactory.IGameObjectsFactory;
+import cz.fit.miadp.mvcgame.command.AbsGameCommand;
 import cz.fit.miadp.mvcgame.config.GameConfig;
 import cz.fit.miadp.mvcgame.observer.IObservable;
 import cz.fit.miadp.mvcgame.observer.IObserver;
@@ -29,6 +33,9 @@ public class GameModel implements IObservable, IGameModel
     // ..
     
     private List<IObserver> myObservers = new ArrayList<IObserver>();
+    private Queue<AbsGameCommand> unexecutedCmds = new LinkedBlockingQueue<AbsGameCommand>();
+    private Stack<AbsGameCommand> executedCmds = new Stack<AbsGameCommand>();
+
     private IGameObjectsFactory goFact;
     private Timer timer;
     private List<IMovementStrategy> movementStrategies = new ArrayList<IMovementStrategy>();
@@ -56,9 +63,34 @@ public class GameModel implements IObservable, IGameModel
             @Override
             public void run() {
                 // THE GAME LOOP
+                executeCmds();
                 moveGameObjects();
             }
         }, 0, GameConfig.TIME_TICK);
+    }
+
+    private void executeCmds()
+    {
+        while( !this.unexecutedCmds.isEmpty() )
+        {
+            AbsGameCommand cmd = this.unexecutedCmds.poll();
+            this.executedCmds.push(cmd);
+            // extExecute instead of execute
+            cmd.extExecute();
+        }
+    }
+
+    public void registerCmd(AbsGameCommand cmd)
+    {
+        this.unexecutedCmds.add(cmd);
+    }
+
+    public void undoLastCommand()
+    {
+        this.executedCmds.pop(); // remove UndoLastCommand 
+        // pop a Command executed just before UndoLastCommand
+        AbsGameCommand cmd = this.executedCmds.pop();
+        cmd.unexecute();
     }
 
     private void moveGameObjects() {
@@ -261,6 +293,7 @@ public class GameModel implements IObservable, IGameModel
 
         gos.addAll(this.enemies);
         gos.addAll(this.missiles);
+        gos.addAll(this.collisions);
         gos.add(this.cannon);
         gos.add(this.getInfo());
 
@@ -269,5 +302,27 @@ public class GameModel implements IObservable, IGameModel
 
 	public IMovementStrategy getActiveMovementStrategy() {
 		return this.movementStrategies.get(this.activeMovementStrategyIndex);
-	}
+    }
+    
+
+    public Object createMemento()
+    {
+        Memento memento =  new Memento();
+        memento.score = this.score;
+        //... TODO store state of GameModel
+        return memento;
+    }
+
+    private class Memento
+    {
+        public int score;
+        //... TODO represent state of GameModel
+    }
+
+    public void setMemento(Object memento)
+    {
+        Memento m = (Memento)memento;
+        this.score = m.score;
+        //... TODO restore state of GameModel
+    }
 }

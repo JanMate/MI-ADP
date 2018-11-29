@@ -1,6 +1,9 @@
 package cz.fit.miadp.mvcgame.controller;
 
 import java.awt.event.KeyEvent;
+
+import cz.fit.miadp.mvcgame.command.CannonShootCommand;
+import cz.fit.miadp.mvcgame.command.UndoLastCommand;
 import cz.fit.miadp.mvcgame.proxy.IGameModel;
 
 public class GameController
@@ -23,13 +26,20 @@ public class GameController
                 this.model.moveCannonDown();
                 break;
             case KeyEvent.VK_SPACE:
-                this.model.cannonShoot();
+                //this.model.cannonShoot();
+                this.model.registerCmd( new CannonShootCommand( this.model ) );
                 break;
             case KeyEvent.VK_A:
                 this.model.aimCannonUp();
                 break;
             case KeyEvent.VK_Z:
-                this.model.aimCannonDown();
+                if((evt.getModifiers() & KeyEvent.CTRL_MASK) != 0)
+                {
+                    // CTRL+Z => undo last cmd
+                    this.model.registerCmd( new UndoLastCommand( this.model ) );
+                }else{
+                    this.model.aimCannonDown();    
+                }
                 break;
             case KeyEvent.VK_S:
                 this.model.incCannonPower();

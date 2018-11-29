@@ -2,6 +2,8 @@ package cz.fit.miadp.mvcgame.proxy;
 
 import java.util.ArrayList;
 
+import cz.fit.miadp.mvcgame.command.AbsGameCommand;
+import cz.fit.miadp.mvcgame.command.CannonShootCommand;
 import cz.fit.miadp.mvcgame.model.Cannon;
 import cz.fit.miadp.mvcgame.model.Enemy;
 import cz.fit.miadp.mvcgame.model.GameObject;
@@ -36,5 +38,11 @@ public interface IGameModel
     public IMovementStrategy getActiveMovementStrategy();
     
 	public void cannonToggleShootingMode();
+	
 
+    public void registerCmd(AbsGameCommand cmd);
+    public void undoLastCommand();
+    
+	public Object createMemento();
+	public void setMemento(Object memento);
 }

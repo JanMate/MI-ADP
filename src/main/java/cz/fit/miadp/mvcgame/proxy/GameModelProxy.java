@@ -2,6 +2,7 @@ package cz.fit.miadp.mvcgame.proxy;
 
 import java.util.ArrayList;
 
+import cz.fit.miadp.mvcgame.command.AbsGameCommand;
 import cz.fit.miadp.mvcgame.model.Cannon;
 import cz.fit.miadp.mvcgame.model.Enemy;
 import cz.fit.miadp.mvcgame.model.GameObject;
@@ -126,5 +127,27 @@ public class GameModelProxy implements IGameModel
         this.subject.cannonToggleShootingMode();
     }
     
+    @Override
+    public void registerCmd(AbsGameCommand cmd)
+    {
+        this.subject.registerCmd(cmd);
+    }
 
+    @Override
+    public void undoLastCommand()
+    {
+        this.subject.undoLastCommand();
+    }
+
+    @Override
+    public Object createMemento()
+    {
+        return this.subject.createMemento();
+    }
+
+    @Override
+    public void setMemento(Object memento)
+    {
+        this.subject.setMemento(memento);
+    }
 }
