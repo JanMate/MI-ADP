@@ -16,6 +16,7 @@ import cz.fit.miadp.mvcgame.config.GameConfig;
 import cz.fit.miadp.mvcgame.observer.IObservable;
 import cz.fit.miadp.mvcgame.observer.IObserver;
 import cz.fit.miadp.mvcgame.proxy.IGameModel;
+import cz.fit.miadp.mvcgame.strategy.GravityMovementStrategy;
 import cz.fit.miadp.mvcgame.strategy.IMovementStrategy;
 import cz.fit.miadp.mvcgame.strategy.RandomMovementStrategy;
 import cz.fit.miadp.mvcgame.strategy.SimpleMovementStrategy;
@@ -47,6 +48,7 @@ public class GameModel implements IObservable, IGameModel
 
         this.movementStrategies.add( new SimpleMovementStrategy() );
         this.movementStrategies.add( new RandomMovementStrategy() );
+        this.movementStrategies.add( new GravityMovementStrategy() );
 
         initGame();
         initTimer();
