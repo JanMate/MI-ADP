@@ -40,7 +40,7 @@ public class GameModel implements IObservable, IGameModel
     private IGameObjectsFactory goFact;
     private Timer timer;
     private List<IMovementStrategy> movementStrategies = new ArrayList<IMovementStrategy>();
-    private int activeMovementStrategyIndex = 0;
+    private int activeMovementStrategyIndex = GameConfig.INIT_ACTIVE_MOVEMENT_STRATEGY_INDEX;
 
     public GameModel()
     {
@@ -91,9 +91,11 @@ public class GameModel implements IObservable, IGameModel
     {
         this.executedCmds.pop(); // remove UndoLastCommand 
         // pop a Command executed just before UndoLastCommand
-        AbsGameCommand cmd = this.executedCmds.pop();
-        cmd.unexecute();
-    }
+        if (!this.executedCmds.empty()){
+            AbsGameCommand cmd = this.executedCmds.pop();
+            cmd.unexecute();
+        }
+   }
 
     private void moveGameObjects() {
         moveMissiles();
@@ -169,8 +171,8 @@ public class GameModel implements IObservable, IGameModel
 
     public void initGame()
     {
-        this.score = 0;
-        this.gravity = 10.0f;
+        this.score = GameConfig.INIT_SCORE;
+        this.gravity = GameConfig.INIT_GRAVITY;
         this.cannon = this.goFact.createCannon();
         this.info = this.goFact.createModelInfo();
         
@@ -310,21 +312,41 @@ public class GameModel implements IObservable, IGameModel
     public Object createMemento()
     {
         Memento memento =  new Memento();
+        memento.cannon = new Cannon(this.cannon);
+        memento.info = this.info;
+        memento.enemies.addAll(this.enemies);
+        memento.missiles.addAll(this.missiles);
+        memento.collisions.addAll(this.collisions);
         memento.score = this.score;
-        //... TODO store state of GameModel
+        memento.gravity = this.gravity;
+        memento.activeMovementStrategyIndex = this.activeMovementStrategyIndex;
+
         return memento;
     }
 
     private class Memento
     {
+        public Cannon cannon;
+        public ModelInfo info;
+        public ArrayList<Enemy> enemies = new ArrayList<Enemy>();
+        public ArrayList<Missile> missiles = new ArrayList<Missile>();
+        public ArrayList<Collision> collisions = new ArrayList<Collision>();
         public int score;
-        //... TODO represent state of GameModel
+        public float gravity;
+        public int activeMovementStrategyIndex;
+
     }
 
     public void setMemento(Object memento)
     {
         Memento m = (Memento)memento;
+        this.cannon = m.cannon;
+        this.info = m.info;
+        this.enemies = m.enemies;
+        this.missiles = m.missiles;
+        this.collisions = m.collisions;
         this.score = m.score;
-        //... TODO restore state of GameModel
+        this.gravity = m.gravity;
+        this.activeMovementStrategyIndex = m.activeMovementStrategyIndex;
     }
 }

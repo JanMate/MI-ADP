@@ -17,6 +17,11 @@ public class RandomMovementStrategy implements IMovementStrategy
     }
 
     @Override
+    public boolean equals(IMovementStrategy strategy) {
+        return strategy.getName().equals(this.getName());
+    }
+
+    @Override
     public String getName() {
         return "Random";
     }

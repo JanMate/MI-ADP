@@ -3,14 +3,12 @@ package cz.fit.miadp.mvcgame;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
-import cz.fit.miadp.mvcgame.model.GameObjectTest;
+import cz.fit.miadp.mvcgame.model.GameModelTest;
 
 @RunWith(Suite.class)
 
 @Suite.SuiteClasses({
-   GameObjectTest.class
+    GameModelTest.class
 })
-
-public class TestSuite_A {
-        
+public class TestSuite_GameModel {
 }

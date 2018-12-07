@@ -5,8 +5,8 @@ import cz.fit.miadp.mvcgame.visitor.IVisitor;
 
 public abstract class GameObject {
 
-    private int posX = 100;
-    private int posY = 100;
+    private int posX = GameConfig.INIT_POS_X;
+    private int posY = GameConfig.INIT_POS_Y;
 
     public int getX() {
         return this.posX;

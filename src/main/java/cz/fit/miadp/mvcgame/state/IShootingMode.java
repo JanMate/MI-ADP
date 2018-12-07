@@ -7,4 +7,5 @@ public interface IShootingMode
     String getName();
     void shoot(Cannon cannon);
     void nextMode(Cannon cannon);
+    boolean equals(IShootingMode mode);
 }

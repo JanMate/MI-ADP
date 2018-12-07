@@ -14,8 +14,8 @@ public class Cannon extends GameObject {
 	private static final IShootingMode SINGLE_MODE = new SingleShootingMode();
 	private static final IShootingMode DOUBLE_MODE = new DoubleShootingMode();
 
-    protected float power = 10.0f;
-	protected float angle = 0.0f;
+    protected float power = GameConfig.INIT_POWER;
+	protected float angle = GameConfig.INIT_ANGLE;
 	protected IGameObjectsFactory goFact;
 	protected IShootingMode shootingMode;
 	protected List<Missile> shootBatch;
@@ -25,6 +25,15 @@ public class Cannon extends GameObject {
 		this.goFact = goFact;
 		this.setSingleShootingMode();
 	}
+
+	public Cannon(Cannon c){
+	    this.setX(c.getX());
+	    this.setY(c.getY());
+	    this.power = c.power;
+	    this.angle = c.angle;
+	    this.goFact = c.goFact;
+	    this.shootingMode = c.shootingMode;
+    }
 
 	public IShootingMode getShootingMode()
 	{
@@ -89,7 +98,4 @@ public class Cannon extends GameObject {
         visitor.visitCannon(this);
     }
 
-	
-
-	
 }

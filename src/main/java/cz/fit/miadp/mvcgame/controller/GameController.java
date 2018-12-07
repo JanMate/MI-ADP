@@ -2,8 +2,7 @@ package cz.fit.miadp.mvcgame.controller;
 
 import java.awt.event.KeyEvent;
 
-import cz.fit.miadp.mvcgame.command.CannonShootCommand;
-import cz.fit.miadp.mvcgame.command.UndoLastCommand;
+import cz.fit.miadp.mvcgame.command.*;
 import cz.fit.miadp.mvcgame.proxy.IGameModel;
 
 public class GameController
@@ -20,17 +19,17 @@ public class GameController
         switch(evt.getKeyCode())
         {
             case KeyEvent.VK_UP:
-                this.model.moveCannonUp();
+                this.model.registerCmd( new CannonUpCommand( this.model ));
                 break;
             case KeyEvent.VK_DOWN:
-                this.model.moveCannonDown();
+                this.model.registerCmd( new CannonDownCommand( this.model ));
                 break;
             case KeyEvent.VK_SPACE:
                 //this.model.cannonShoot();
                 this.model.registerCmd( new CannonShootCommand( this.model ) );
                 break;
             case KeyEvent.VK_A:
-                this.model.aimCannonUp();
+                this.model.registerCmd( new AimCannonUpCommand( this.model ));
                 break;
             case KeyEvent.VK_Z:
                 if((evt.getModifiers() & KeyEvent.CTRL_MASK) != 0)
@@ -38,20 +37,20 @@ public class GameController
                     // CTRL+Z => undo last cmd
                     this.model.registerCmd( new UndoLastCommand( this.model ) );
                 }else{
-                    this.model.aimCannonDown();    
+                    this.model.registerCmd( new AimCannonDownCommand( this.model ));
                 }
                 break;
             case KeyEvent.VK_S:
-                this.model.incCannonPower();
+                this.model.registerCmd( new IncrementCannonPowerCommand( this.model ));
                 break;
             case KeyEvent.VK_X:
-                this.model.decCannonPower();
+                this.model.registerCmd( new DecrementCannonPowerCommand( this.model ));
                 break;
             case KeyEvent.VK_Q:
-                this.model.switchMovementStrategy();
+                this.model.registerCmd( new SwitchMovementStrategyCommand( this.model ));
                 break;
             case KeyEvent.VK_W:
-                this.model.cannonToggleShootingMode();
+                this.model.registerCmd( new CannonToggleShootingModeCommand( this.model ));
                 break;
             default:
                 //nothing

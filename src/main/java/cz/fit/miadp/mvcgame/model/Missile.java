@@ -1,5 +1,6 @@
 package cz.fit.miadp.mvcgame.model;
 
+import cz.fit.miadp.mvcgame.config.GameConfig;
 import cz.fit.miadp.mvcgame.strategy.IMovementStrategy;
 import cz.fit.miadp.mvcgame.visitor.IVisitor;
 
@@ -17,7 +18,7 @@ public class Missile extends LifetimeAwareGameObject {
         this.initAngle = initAngle;
         this.initX = initX;
         this.initY = initY;
-        this.initPower = initPower / 20.0f;
+        this.initPower = initPower / GameConfig.POWER_DIVISOR;
         this.setX(initX);
         this.setY(initY);
     }

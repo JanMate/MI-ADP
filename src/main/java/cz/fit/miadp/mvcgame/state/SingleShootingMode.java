@@ -15,6 +15,11 @@ public class SingleShootingMode implements IShootingMode {
 	}
 
     @Override
+    public boolean equals(IShootingMode mode) {
+        return mode.getName().equals(this.getName());
+    }
+
+    @Override
     public String getName() {
         return "Single";
     }

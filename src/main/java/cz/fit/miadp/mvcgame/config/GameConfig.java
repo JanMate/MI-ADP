@@ -6,8 +6,11 @@ public class GameConfig
     public static final  int MAX_Y = 700;
     public static final  int MAX_ENEMIES = 10;
 
+    public static final int INIT_POS_X = 100;
+    public static final int INIT_POS_Y = 100;
+
     public static final  int MOVE_STEP = 10;
-    public static final  float GRAVITY_STEP = 1.0f;
+    public static final  float GRAVITY_STEP = 15.0f;
     public static final  float POWER_STEP = 1.0f;
     public static final  float ANGLE_STEP = 0.1f;
     
@@ -19,6 +22,8 @@ public class GameConfig
     public static final  float INIT_GRAVITY = 10.0f;
     public static final  float INIT_POWER = 10.0f;
     public static final  float INIT_ANGLE = 0.0f;
-	
 
+    public static final  float POWER_DIVISOR = 20.0f;
+
+    public static final  int INIT_ACTIVE_MOVEMENT_STRATEGY_INDEX = 0;
 }

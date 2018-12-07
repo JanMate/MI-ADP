@@ -8,9 +8,8 @@ import cz.fit.miadp.mvcgame.model.GameObjectTest;
 @RunWith(Suite.class)
 
 @Suite.SuiteClasses({
-        GameObjectTest.class
+   GameObjectTest.class
 })
 
-public class TestSuite_B {
-
+public class TestSuite_GameObject {
 }

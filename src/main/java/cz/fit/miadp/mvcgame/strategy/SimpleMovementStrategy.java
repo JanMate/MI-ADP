@@ -14,6 +14,11 @@ public class SimpleMovementStrategy implements IMovementStrategy
     }
 
     @Override
+    public boolean equals(IMovementStrategy strategy) {
+        return strategy.getName().equals(this.getName());
+    }
+
+    @Override
     public String getName() {
         return "Simple";
     }
